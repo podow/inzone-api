@@ -24,6 +24,17 @@
         "node/prefer-global/url-search-params": ["error", "always"],
         "node/prefer-global/url": ["error", "always"],
         "node/prefer-promises/dns": "error",
-        "node/prefer-promises/fs": "error"
+        "node/prefer-promises/fs": "error",
+
+        // Custom settings
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "semi": ["error", "always"],
+        "space-before-function-paren": "error",
+        "space-before-blocks": "error",
+        "spaced-comment": "error",
+        "no-undef": "error",
+        "no-undef-init": "error",
+        "no-undefined": "error",
+        "no-unused-vars": "warn"
     }
 }

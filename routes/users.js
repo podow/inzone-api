@@ -1,24 +1,53 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const User = require('../models').User;
 
-/* GET users listing. */
+router.post('/create', async (req, res) => {
+  try {
+    const newUser = await User.create(req.body);
+
+    res.send({
+      isSuccess: !!newUser,
+      newUser
+    });
+  } catch (err) {
+    res.send({
+      isSuccess: !err,
+      err
+    });
+  }
+});
+
 router.get('/', async (req, res) => {
-  res.send({
-    users: await User.findAll()
-  });
+  try {
+    const users = await User.findAll();
+
+    res.send({
+      isSuccess: !!users,
+      users
+    });
+  } catch (err) {
+    res.send({
+      isSuccess: !err,
+      err
+    });
+  }
 });
 
 router.get('/:id', async (req, res) => {
-    res.send({
-        user: await User.findByPk(req.params.id)
-    });
-});
+  try {
+    const user = await User.findByPk(req.params.id);
 
-router.get('/create', async (req, res) => {
-  res.send({
-    newUser: await User.create({ firstName: 'Test', lastName: "test", email: "test@mail.com" })
-  });
+    res.send({
+      isSuccess: !!user,
+      user
+    });
+  } catch (err) {
+    res.send({
+      isSuccess: !err,
+      err
+    });
+  }
 });
 
 module.exports = router;

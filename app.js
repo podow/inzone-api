@@ -1,22 +1,38 @@
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var Sequelize = require('sequelize');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const Sequelize = require('sequelize');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
+/**
+ * Middlewares execution
+ */
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+/**
+ * Setting favicon
+ */
+app.use('/favicon.ico', express.static('./favicon.ico'));
+
+/**
+ * Setting routes
+ * TODO: Move to another module
+ */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-const sequelize = new Sequelize('test', 'root', 'root', {
+/**
+ * DB Connection setup
+ * TODO: Update with env
+ */
+new Sequelize('test', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql', // | 'mariadb' | 'postgres' | 'mssql'
     dialectOptions: {
