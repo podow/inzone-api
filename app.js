@@ -16,6 +16,18 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-const sequelize = new Sequelize('mysql://root:root@localhost:3306/test');
+const sequelize = new Sequelize('test', 'root', 'root', {
+    host: 'localhost',
+    dialect: 'mysql', // | 'mariadb' | 'postgres' | 'mssql'
+    dialectOptions: {
+        connectTimeout: 1000
+    },
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    }
+});
 
 module.exports = app;
