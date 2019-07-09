@@ -24,8 +24,14 @@ module.exports = (sequelize, DataTypes) => {
     hash: {
       type: DataTypes.STRING,
       allowNull: false,
-      set(password) {
+      set (password) {
         this.setDataValue('hash', this.encodePass(password));
+      }
+    },
+    salt: {
+      type: DataTypes.STRING,
+      defaultValue: function () {
+        return crypto.randomBytes(16).toString('hex');
       }
     }
   });
@@ -35,30 +41,29 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.encodePass = function (password) {
-    const salt = crypto.randomBytes(16).toString('hex');
-    return crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+    return crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
   };
 
-  User.prototype.validatePassword = function(password) {
+  User.prototype.validatePassword = function (password) {
     const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
     return this.hash === hash;
   };
 
-  User.prototype.generateJWT = function() {
+  User.prototype.generateJWT = function () {
     const today = new Date();
     const expirationDate = new Date(today);
     expirationDate.setDate(today.getDate() + 60);
 
     return jwt.sign({
+      id: this.id,
       email: this.email,
-      id: this._id,
-      exp: parseInt(expirationDate.getTime() / 1000, 10),
+      exp: parseInt(expirationDate.getTime() / 1000, 10)
     }, 'secret');
   };
 
-  User.prototype.toAuthJSON = function() {
+  User.prototype.toAuthJSON = function () {
     return {
-      _id: this._id,
+      id: this.id,
       email: this.email,
       token: this.generateJWT(),
     };
