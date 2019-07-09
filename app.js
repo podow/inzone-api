@@ -2,7 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const Sequelize = require('sequelize');
+const session = require('express-session');
+const cors = require('cors');
+
+require('./config/db');
+require('./config/passport');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -18,12 +22,15 @@ const app = express();
 /**
  * Middlewares execution
  */
+app.use(cors());
+app.use(require('morgan')('dev'));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(session({ secret: 'nodejs', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
 /**
  * Set favicon
@@ -36,33 +43,6 @@ app.use('/favicon.ico', express.static('./favicon.ico'));
  */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-/**
- * DB Connection setup
- * TODO: Update with env
- */
-const {
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_PORT
-} = process.env;
-
-new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-  host: DB_HOST,
-  port: DB_PORT || 5432,
-  // 'mysql' | 'mariadb' | 'postgres' | 'mssql'
-  dialect: 'postgres',
-  dialectOptions: {
-      connectTimeout: 1000
-  },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+app.use(require('./routes'));
 
 module.exports = app;

@@ -29,7 +29,6 @@
         // Custom settings
         "quotes": ["error", "single", { "allowTemplateLiterals": true }],
         "semi": ["error", "always"],
-        "space-before-function-paren": "error",
         "space-before-blocks": "error",
         "spaced-comment": "error",
         "no-undef": "error",
