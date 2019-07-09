@@ -7,6 +7,12 @@ const Sequelize = require('sequelize');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
+const IS_DEV = process.env.NODE_ENV === 'development';
+
+if (IS_DEV) {
+  require('dotenv').config();
+}
+
 const app = express();
 
 /**
@@ -35,18 +41,28 @@ app.use('/users', usersRouter);
  * DB Connection setup
  * TODO: Update with env
  */
-new Sequelize('test', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql', // | 'mariadb' | 'postgres' | 'mssql'
-    dialectOptions: {
-        connectTimeout: 1000
-    },
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
+const {
+  DB_HOST,
+  DB_USER,
+  DB_PASSWORD,
+  DB_NAME,
+  DB_PORT
+} = process.env;
+
+new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT || 5432,
+  // 'mysql' | 'mariadb' | 'postgres' | 'mssql'
+  dialect: 'postgres',
+  dialectOptions: {
+      connectTimeout: 1000
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
 });
 
 module.exports = app;
