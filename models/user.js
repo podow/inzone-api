@@ -30,9 +30,58 @@ module.exports = (sequelize, DataTypes) => {
     },
     salt: {
       type: DataTypes.STRING,
+      allowNull: false,
       defaultValue: function () {
         return crypto.randomBytes(16).toString('hex');
       }
+    },
+    roles: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
+      defaultValue: function () {
+        return ['ROLE_USER'];
+      }
+    },
+    enabled: {
+      type: DataTypes.ENUM,
+      values: [true, false],
+      allowNull: false,
+      defaultValue: function () {
+        return false;
+      }
+    },
+    locked: {
+      type: DataTypes.ENUM,
+      values: [true, false],
+      allowNull: false,
+      defaultValue: function () {
+        return false;
+      }
+    },
+    lastLoginAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    ipAddress: {
+      type: DataTypes.STRING,
+      defaultValue: function () {
+        return '127.0.0.1';
+      }
+    },
+    phone: {
+      type: DataTypes.STRING
+    },
+    avatar: {
+      type: DataTypes.STRING
+    },
+    country: {
+      type: DataTypes.STRING
+    },
+    confirmationToken: {
+      type: DataTypes.STRING
+    },
+    passwordRequestAt: {
+      type: DataTypes.DATE
     }
   });
 

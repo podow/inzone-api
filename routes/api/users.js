@@ -2,8 +2,9 @@ const passport = require('passport');
 const router = require('express').Router();
 const auth = require('../auth');
 const Users = require('../../models').User;
+const ipAddressMiddleware = require('../../utils/ipAddressMiddleware');
 
-router.post('/register', auth.optional, (req, res,) => {
+router.post('/register', [auth.optional, ipAddressMiddleware], (req, res,) => {
   const { body: user } = req;
 
   if(!user.email) {
@@ -31,7 +32,7 @@ router.post('/register', auth.optional, (req, res,) => {
     .catch(err => res.send({ err }));
 });
 
-router.post('/login', auth.optional, (req, res, next) => {
+router.post('/login', [auth.optional, ipAddressMiddleware], (req, res, next) => {
   const { body: user } = req;
 
   if(!user.email) {
@@ -69,9 +70,9 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 router.get('/current', auth.required, (req, res) => {
-  const { payload: { email } } = req;
+  const { payload: { id } } = req;
 
-  return Users.findOne({ where: { email } })
+  return Users.findByPk(id)
     .then((user) => {
       if(!user) {
         return res.sendStatus(400);
