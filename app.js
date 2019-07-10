@@ -9,7 +9,6 @@ require('./config/db');
 require('./config/passport');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
@@ -42,7 +41,6 @@ app.use('/favicon.ico', express.static('./favicon.ico'));
  * TODO: Move to another module
  */
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use(require('./routes'));
 
 // catch 404 and forward to error handler
