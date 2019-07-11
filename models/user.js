@@ -114,6 +114,7 @@ module.exports = (sequelize, DataTypes) => {
     return {
       id: this.id,
       email: this.email,
+      roles: this.roles,
       token: this.generateJWT(),
     };
   };
