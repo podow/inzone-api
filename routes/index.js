@@ -8,6 +8,6 @@ router.get('/version', function (req, res) {
   });
 });
 
-router.use('/api', require('./api'));
+router.use(`/api/v${version}`, require('./api/v1'));
 
 module.exports = router;
