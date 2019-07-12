@@ -84,6 +84,7 @@ router.get('/current', auth.required, (req, res) => {
 });
 
 // TODO: Replace params with .env
+// TODO: move to utils
 router.post('/forgot-password', auth.optional, function (req, res) {
   let transporter = nodeMailer.createTransport({
     host: 'smtp.gmail.com',
