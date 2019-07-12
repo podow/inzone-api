@@ -2,7 +2,7 @@ const passport = require('passport');
 const router = require('express').Router();
 const nodeMailer = require('nodemailer');
 const auth = require('../../../utils/auth');
-const Users = require('../../../models').User;
+const { Users } = require('../../../models');
 const ipAddressMiddleware = require('../../../utils/ipAddressMiddleware');
 
 router.post('/register', [auth.optional, ipAddressMiddleware], (req, res,) => {
