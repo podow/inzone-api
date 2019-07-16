@@ -119,5 +119,9 @@ module.exports = (sequelize, DataTypes) => {
     };
   };
 
+  User.prototype.isGranted = function (role) {
+    return this.roles.includes(role);
+  };
+
   return User;
 };
