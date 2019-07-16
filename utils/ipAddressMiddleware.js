@@ -1,10 +1,10 @@
-const User = require('../models').User;
+const { Users } = require('../models');
 
 module.exports = async (req, res, next) => {
   const { payload: { id } } = req;
   const { ip: ipAddress } = req;
 
-  const user = await User.findByPk(id);
+  const user = await Users.findByPk(id);
 
   user.update({
     ipAddress
