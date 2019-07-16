@@ -5,8 +5,8 @@ const auth = require('../../../utils/auth');
 const { Users } = require('../../../models');
 const ipAddressMiddleware = require('../../../utils/ipAddressMiddleware');
 
-router.post('/register', [auth.optional, ipAddressMiddleware], (req, res,) => {
-  const { body: user } = req;
+router.post('/register', auth.optional, (req, res,) => {
+  const { body: user, ip: ipAddress } = req;
 
   if(!user.email) {
     return res.status(422).json({
@@ -27,6 +27,7 @@ router.post('/register', [auth.optional, ipAddressMiddleware], (req, res,) => {
   const finalUser = new Users(user);
 
   finalUser.hash = user.hash;
+  finalUser.ipAddress = ipAddress;
 
   return finalUser.save()
     .then(() => res.send({ user: finalUser.toAuthJSON() }))
