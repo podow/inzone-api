@@ -34,8 +34,8 @@ router.post('/register', auth.optional, (req, res,) => {
     .catch(err => res.send({ err }));
 });
 
-router.post('/login', [auth.optional, ipAddressMiddleware], (req, res, next) => {
-  const { body: user } = req;
+router.post('/login', auth.optional, (req, res, next) => {
+  const { body: user, ip: ipAddress } = req;
 
   if(!user.email) {
     return res.status(422).json({
@@ -61,6 +61,7 @@ router.post('/login', [auth.optional, ipAddressMiddleware], (req, res, next) => 
     if (passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
+      user.ipAddress = ipAddress;
 
       return res.json({ user: user.toAuthJSON() });
     }
