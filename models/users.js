@@ -89,8 +89,6 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
   };
 
-  User.prototype.getFullName = () => `${this.firstName} ${this.lastName} ${this.middleName}`;
-
   User.prototype.encodePass = function (password) {
     return crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
   };
@@ -115,7 +113,9 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.toAuthJSON = function () {
     return {
       id: this.id,
-      name: this.getFullName(),
+      firstName: this.firstName,
+      lastName: this.lastName,
+      middleName: this.middleName,
       email: this.email,
       roles: this.roles,
       token: this.generateJWT(),
